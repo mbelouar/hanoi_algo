@@ -2,24 +2,44 @@
 #include <time.h>
 #include <stdlib.h>
 
-// void    tri(int *T, int debut, int milieu, int fin)
-// {
-//     int i, j, k;
-
-
-// }
-
-void    triFusion(int *T, int debut, int fin)
+void    ft_fusion(int *T, int *T_gauche, int gauche_size, int *T_droite, int droite_size)
 {
-    int milieu;
+    int i = 0, j = 0, k = 0;
 
-    if (debut > fin)  // dans notre cas on suppose quand a une trie croissante
+    while (i < gauche_size && j < droite_size)
     {
-        milieu = (debut + fin) / 2;
-        triFusion(T, debut, milieu);
-        triFusion(T, milieu + 1, fin);
-        //tri(T, debut, milieu, fin);
+        if (T_gauche[i] <= T_droite[j])
+            T[k++] = T_gauche[i++];
+        else
+            T[k++] = T_droite[j++];
     }
+    while (i < gauche_size)
+        T[k++] = T_gauche[i++];
+    while (j < droite_size)
+        T[k++] = T_droite[j++];
+}
+
+void    ft_triFusion(int *T, int size)
+{
+    if (size < 2)
+        return ;
+    int milieu = size / 2;
+    int T_gauche[milieu], T_droite[size - milieu];
+    int i = 0;
+    while (i < milieu)
+    {
+        T_gauche[i] = T[i];
+        i++;
+    }
+    i = milieu;
+    while (i < size)
+    {
+        T_droite[i - milieu] = T[i];
+        i++;
+    }
+    ft_triFusion(T_gauche, milieu);
+    ft_triFusion(T_droite, size - milieu);
+    ft_fusion(T, T_gauche, milieu, T_droite, size - milieu);
 }
 
 int main()
@@ -43,7 +63,13 @@ int main()
         i++;
     }
     t_debut = (double)clock();
-    triFusion(T, 0, n - 1);
+    ft_triFusion(T, n);
     t_fin = (double)clock();
-    printf("Le temps d'execution est : %lf (s)", (t_fin - t_debut) / CLOCKS_PER_SEC);
+
+    printf("\nle tableau triee : ");
+    i = 0;
+    
+    while (i < n)
+        printf("%d ", T[i++]);
+    printf("\nLe temps d'execution est : %lf (s)", (t_fin - t_debut) / CLOCKS_PER_SEC);
 }
