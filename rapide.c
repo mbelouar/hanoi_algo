@@ -2,6 +2,40 @@
 #include <time.h>
 #include <stdlib.h>
 
+void swap(int *a, int *b) 
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int arr[], int first, int last)
+ {
+    int pivot = arr[last];
+    int i = first - 1; 
+    int j = first;
+    while (j <= last -1)
+    {
+        if (arr[j] <= pivot)
+        {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+        j++;
+    }
+    swap(&arr[i + 1], &arr[last]);
+    return i + 1; 
+}
+
+void quicksort(int arr[], int first, int last) {
+    if (first < last)
+    { 
+        int pivot_index = partition(arr, first, last); 
+        quicksort(arr, first, pivot_index - 1); 
+        quicksort(arr, pivot_index + 1, last);
+    }
+}
+
 int main()
 {
     int *T;
